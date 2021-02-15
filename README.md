@@ -2,18 +2,15 @@
 
 ## Purpose
 
-Lightning Bot is a Discord bot designed for use on My Little Pony-themed Discord servers.
+Lightning Bot is a Discord bot designed for use on pony-themed Discord servers.
 
 ## Functionality
 
-- Nothing
-
-## Coming Soon
-
-- Adding administrators on a per-guild basis;
-- Adding Philomena filter on a per-channel basis;
-- Random Philomena image by query;
-- Philomena image per ID.
+- Add operators on a per-guild basis;
+- Decide which Philomena server to use -- defaults to Ponybooru;
+- Each channel has its own filters, using Philomena's native filter system;
+- Fetch random image based on query;
+- Fetch image based on ID.
 
 ## Usage
 
@@ -22,6 +19,7 @@ Lightning Bot is a Discord bot designed for use on My Little Pony-themed Discord
 You will need to set these for the bot to work:
 
 - `LIGHTNING_DISCORD_TOKEN` - Bot token.
+- `LIGHTNING_DISCORD_PREFIX` - Character to start commands with.
 - `LIGHTNING_DISCORD_GLOBAL_ADMIN` - Discord ID of the global admin user.
 - `LIGHTNING_PHILOMENA_ROOT` - Root URL for Philomena API (can be used to switch to alternate booru).
 - `LIGHTNING_PHILOMENA_KEY` - API key for the chosen Philomena booru.
