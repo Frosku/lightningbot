@@ -1,0 +1,16 @@
+{:discord {:token ""
+           :prefix "?"
+           :global-admin ""
+           :env {:token :lightning-discord-token
+                 :prefix :lightning-discord-prefix
+                 :global-admin :lightning-discord-global-admin}}
+ :philomena {:api-root "https://ponybooru.org/api/v1/json/"
+             :api-key ""
+             :env {:api-root :lightning-philomena-root
+                   :api-key :lightning-philomena-key}}
+ :crux {:db "lightning"
+        :db-dir "db"
+        :evt-dir "evt"
+        :env {:db :lightning-crux-db
+              :db-dir :lightning-crux-db-dir
+              :evt-dir :lightning-crux-evt-dir}}}
