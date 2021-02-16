@@ -12,17 +12,21 @@
   [channel-id]
   (keyword (str "channel-filter-" channel-id)))
 
+(defn api-root
+  [ctx]
+  (str (get-in ctx [:philomena :web-root]) "api/v1/json/"))
+
 (defn api-search-images-endpoint
   [ctx]
-  (str (get-in ctx [:philomena :api-root]) "search/images"))
+  (str (api-root ctx) "search/images"))
 
 (defn api-image-endpoint
   [ctx]
-  (str (get-in ctx [:philomena :api-root]) "images/"))
+  (str (api-root ctx) "images/"))
 
 (defn api-filters-endpoint
   [ctx]
-  (str (get-in ctx [:philomena :api-root]) "filters/"))
+  (str (api-root ctx) "filters/"))
 
 (defn get-image-by-id
   [ctx filter id]
@@ -91,15 +95,23 @@
   [ctx channel-id]
   (prefs/get-preference ctx (channel-filter-preference-key channel-id)))
 
+(defn truncate
+  [string length]
+  (if (> (count string) length)
+    (str (subs string 0 length) "…")
+    string))
+
 (defn make-image-embed
-  [image]
+  [ctx image]
   {:title "Here's your pony picture!"
    :type "rich"
    :color 0xd241b5
-   :fields [{:name "Tags"
+   :fields [{:name "Description"
+             :value (truncate (get-in image [:description]) 100)}
+            {:name "Tags"
              :value (str/join ", " (get-in image [:tags]))}
             {:name "Full Res"
-             :value (get-in image [:view_url])}]
+             :value (str (get-in ctx [:philomena :web-root]) "images/" (get-in image [:id]))}]
    :image {:url (get-in image [:representations :medium])}
    :footer {:text "Frosku x Lightning Dust OTP"}})
 
@@ -151,7 +163,7 @@
                                                        :message_id id}
                                    :content (str "No matches found for '" query "'."))
               (msg/create-message! (:msg @state) channel-id
-                                   :embed (make-image-embed image)))))))))
+                                   :embed (make-image-embed ctx image)))))))))
 
 (defn id-image-handler
   [_ {:keys [channel-id guild-id content id]} ctx state]
@@ -175,4 +187,4 @@
                                                        :message_id id}
                                    :content (str "No matches found. Is that image suitable for this channel?"))
               (msg/create-message! (:msg @state) channel-id
-                                   :embed (make-image-embed image)))))))))
+                                   :embed (make-image-embed ctx image)))))))))

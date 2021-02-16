@@ -4,9 +4,9 @@
            :env {:token :lightning-discord-token
                  :prefix :lightning-discord-prefix
                  :global-admin :lightning-discord-global-admin}}
- :philomena {:api-root "https://ponybooru.org/api/v1/json/"
+ :philomena {:web-root "https://ponybooru.org/"
              :api-key ""
-             :env {:api-root :lightning-philomena-root
+             :env {:web-root :lightning-philomena-root
                    :api-key :lightning-philomena-key}}
  :crux {:db "lightning"
         :db-dir "db"
