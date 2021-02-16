@@ -1,3 +1,5 @@
+.gradle/
+.idea/
 /target
 /classes
 /checkouts
@@ -13,3 +15,4 @@ pom.xml.asc
 .hg/
 .#*
 lightning/
+lightningbot.iml

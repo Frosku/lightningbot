@@ -13,8 +13,10 @@
                  [cheshire "5.10.0"]
                  [juxt/crux-core "20.07-1.9.2-beta"]
                  [juxt/crux-lmdb "20.07-1.9.2-alpha"]
+                 [com.taoensso/timbre "5.1.2"]
                  [com.fzakaria/slf4j-timbre "0.3.19"]]
   :main lightningbot.core
   :aot :all
   :resource-paths ["res"]
+  :test-paths ["t"]
   :repl-options {:init-ns lightningbot.core})

@@ -1,36 +1,43 @@
 (ns lightningbot.core
   (:require [clojure.core.async :as async]
-            [clojure.string :as str]
             [discljord.connections :as conn]
             [discljord.events :as evt]
             [discljord.messaging :as msg]
-            [lightningbot.context :as ctx]
-            [lightningbot.adapter.philomena :as philomena]
-            [lightningbot.admins :as admins]))
-
-(def state (atom nil))
+            [lightningbot.booru.handlers :as booru]
+            [lightningbot.common.config :as cfg]
+            [lightningbot.op.handlers :as op]
+            [taoensso.timbre :refer [debug]]))
 
 (defn debug-handler
-  [event-type message ctx state]
-  (println {:event-type event-type :message message :ctx ctx :state state}))
+  [_ message _]
+  (debug message))
 
 (def handlers
   {:message-create [#'debug-handler
-                    #'admins/ami-admin-handler
-                    #'admins/add-admin-handler
-                    #'philomena/filter-set-handler
-                    #'philomena/random-image-handler
-                    #'philomena/id-image-handler]})
+                    #'op/add-operator-handler
+                    #'op/remove-operator-handler
+                    #'op/author-is-operator-handler
+                    #'booru/image-by-id-handler
+                    #'booru/otp-image-handler
+                    #'booru/random-image-handler
+                    #'booru/set-channel-filter-handler
+                    #'booru/remove-channel-filter-handler]})
 
 (defn -main
-  [& args]
-  (let [ctx (ctx/get-application-context)
+  [& _]
+  (let [config (cfg/get-config)
         event-ch (async/chan 1000)
-        bot-ch (conn/connect-bot! (get-in ctx [:discord :token]) event-ch :intents #{:guild-messages})
-        msg-ch (msg/start-connection! (get-in ctx [:discord :token]))]
-    (reset! state {:event event-ch :bot bot-ch :msg msg-ch})
+        bot-ch (conn/connect-bot! (get-in config [:discord :token])
+                                  event-ch
+                                  :intents #{:guild-messages})
+        msg-ch (msg/start-connection! (get-in config [:discord :token]))
+        state (assoc config :channels {:event-ch event-ch
+                                       :bot-ch bot-ch
+                                       :msg-ch msg-ch})]
+    (debug "Successfully started" state)
     (try
-      (evt/message-pump! event-ch #(evt/dispatch-handlers #'handlers %1 %2 ctx state))
+      (evt/message-pump! event-ch
+                         #(evt/dispatch-handlers #'handlers %1 %2 state))
       (finally
         (msg/stop-connection! msg-ch)
         (conn/disconnect-bot! bot-ch)))))

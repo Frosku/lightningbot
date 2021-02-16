@@ -1,9 +1,9 @@
 {:discord {:token ""
            :prefix "?"
-           :global-admin ""
+           :bot-owner ""
            :env {:token :lightning-discord-token
                  :prefix :lightning-discord-prefix
-                 :global-admin :lightning-discord-global-admin}}
+                 :bot-owner :lightning-discord-bot-owner}}
  :philomena {:web-root "https://ponybooru.org/"
              :api-key ""
              :env {:web-root :lightning-philomena-root
